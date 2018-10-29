@@ -204,7 +204,7 @@ Itemモデルに対してDBアクセス処理や保存処理を行うための�
 ここでは保存を行いますが、JpaRepositoryに保存するメソッドは定義されていますので、メソッドの宣言は何も必要ありません。
 
 #### コントローラに追加する
-最後に、フォームが送信されたときに受けるコントローラーを作成します。
+さらに、フォームが送信されたときに受けるコントローラーを作成します。
 ```java
 public class ItemController {
     @Autowired
@@ -223,6 +223,25 @@ public class ItemController {
 (例ではlombokプラグインを使用しているので`@NoArgsConstractor`と`@Data`を付与しています。)
 受け取ったモデルは対応したリポジトリの`save()`メソッドを呼ぶことでDBに保存することができます。
 
+#### コントローラを修正する
+最後に、固定のアイテムをリストにしていたコントローラの該当の部分をDBのデータを取得するように書き換えます。
+```java
+@Controller
+@RequestMapping("/items")
+public class ItemController {
+
+    @Autowired
+    ItemRepository itemRepository;
+
+    @GetMapping
+    public String listItem(Model model) {
+        List<Item> list = itemRepository.findAll();
+        model.addAttribute("items", list);
+        return "list_item";
+    }
+}
+```
+これで登録画面で登録した商品データが一覧で見れるようになりました。
 
 ----
 ## 詳細ページを作成する
